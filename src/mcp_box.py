@@ -18,9 +18,9 @@ from starlette.routing import Mount
 from starlette.types import Receive, Scope, Send
 from mcp.server.fastmcp import FastMCP
 
-from fast_mcp_sandbox import FastMCPBox
+from src.fast_mcp_sandbox import FastMCPBox
 
-from _logging import verbose_logger
+from src.utils.logging import verbose_logger
 
 
 class McpBox():

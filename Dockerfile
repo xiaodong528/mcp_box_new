@@ -18,4 +18,4 @@ RUN pip install --no-cache-dir \
 EXPOSE 47070 47071
 
 # 运行应用
-CMD ["python", "mcp_box.py", "--host", "0.0.0.0", "--port", "47070"]
+CMD ["python", "-m", "src.mcp_box", "--host", "0.0.0.0", "--port", "47070"]

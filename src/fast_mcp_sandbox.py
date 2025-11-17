@@ -15,7 +15,7 @@ from mcp.types import (
     TextContent,
 )
 from mcp.types import Tool as MCPTool
-from _logging import verbose_logger
+from src.utils.logging import verbose_logger
 
 class FastMCPBox(FastMCP):
     def __init__(
