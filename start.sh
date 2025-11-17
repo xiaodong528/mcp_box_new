@@ -1,0 +1,15 @@
+ docker run -itd \
+ -e TZ=Asia/Shanghai \
+ -p 47070:47070 \
+ -p 47071:47071 \
+ -v /data/nbomc/hanmg/mcp_box/mcp_box_new_bak/main.py:/usr/local/lib/python3.11/site-packages/e2b/sandbox/main.py \
+ -e E2B_JUPYTER_PORT=49999 \
+ -e E2B_DEBUG="true" \
+ -e E2B_JUPYTER_HOST="10.1.207.156" \
+ -e DB_HOST="10.19.88.9" \
+ -e DB_PORT=5432 \
+ -e DB_NAME="mcpbox" \
+ -e DB_USER="mcpbox" \
+ -e DB_PASSWORD="mcpbox" \
+ -e STORE_IN_FILE=False \
+ --name mcp-box-server mcp-box-server:latest

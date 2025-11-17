@@ -1,0 +1,10 @@
+[
+  {
+    "mcp_tool_name": "getHostFaultCause",
+    "mcp_tool_code": "\n\"\"\"\n<requirements>\nuvicorn>=0.34.3\n</requirements>\n\"\"\"\nfrom typing import Annotated, Optional\nfrom pydantic import Field\n@mcp.tool(\n    description='主机故障解决方案'\n)\ndef getHostFaultCause(\n    faultCode: Annotated[str, Field(description=\"故障代码\")],\n    severity: Annotated[int, Field(default=2, description=\"故障严重等级，1-5，默认为1\")]\n    ):\n    print(f\"getHostFaultCause: faultCode={faultCode}, severity={severity}\")\n    faultCause = \"\"\n    if (faultCode == 'F02'):\n        faultCause = \"主机磁盘故障，需要更换磁盘\"\n    else:\n        faultCause = f\"未知故障，故障代码{faultCode}\"        \n    return faultCause\n"
+  },
+  {
+    "mcp_tool_name": "getMiddleFaultCause",
+    "mcp_tool_code": "\n\n@mcp.tool(\n    description='中间件故障解决方案',\n    annotations={\n        \"parameters\": {\n            \"faultCode\": {\"description\": \"故障代码\"},\n            \"severity\": {\"description\": \"故障严重等级，1-5，默认为1\"}\n        }\n    }\n)\ndef getMiddleFaultCause(\n    faultCode: str,\n    severity: int=1\n    ):\n    print(f\"getMiddleFaultCause: faultCode={faultCode}, severity={severity}\")\n    faultCause = \"\"\n    if (faultCode == 'F03'):\n        faultCause = \"中间件redis故障，重启redis\"\n    else:\n        faultCause = f\"未知故障，故障代码{faultCode}\"        \n    return {'result': 0, 'faultCause': faultCause}\n"
+  }
+]
