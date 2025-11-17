@@ -18,9 +18,20 @@ from starlette.routing import Mount
 from starlette.types import Receive, Scope, Send
 from mcp.server.fastmcp import FastMCP
 
-from src.fast_mcp_sandbox import FastMCPBox
-
-from src.utils.logging import verbose_logger
+# 支持两种导入方式：作为模块导入和直接运行
+try:
+    from .fast_mcp_sandbox import FastMCPBox
+    from .utils.logging import verbose_logger
+except ImportError:
+    # 直接运行时的处理
+    import sys
+    from pathlib import Path
+    # 将项目根目录添加到 sys.path
+    project_root = Path(__file__).parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from src.fast_mcp_sandbox import FastMCPBox
+    from src.utils.logging import verbose_logger
 
 
 class McpBox():

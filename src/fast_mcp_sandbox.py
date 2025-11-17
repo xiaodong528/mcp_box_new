@@ -15,7 +15,17 @@ from mcp.types import (
     TextContent,
 )
 from mcp.types import Tool as MCPTool
-from src.utils.logging import verbose_logger
+
+# 支持两种导入方式
+try:
+    from .utils.logging import verbose_logger
+except ImportError:
+    import sys
+    from pathlib import Path
+    project_root = Path(__file__).parent.parent
+    if str(project_root) not in sys.path:
+        sys.path.insert(0, str(project_root))
+    from src.utils.logging import verbose_logger
 
 class FastMCPBox(FastMCP):
     def __init__(

@@ -10,7 +10,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/
 lib64/
 parts/
 sdist/
@@ -63,3 +63,4 @@ temp/
 # Config (if contains sensitive data)
 # config/mcp-tool.json
 .env
+.serena
