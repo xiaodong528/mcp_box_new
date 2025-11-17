@@ -63,4 +63,3 @@ temp/
 # Config (if contains sensitive data)
 # config/mcp-tool.json
 .env
-.claude
