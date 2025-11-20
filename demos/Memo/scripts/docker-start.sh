@@ -32,7 +32,7 @@ cd "$(dirname "$0")/.."
 
 # Check for port conflicts
 echo -e "${YELLOW}Checking for port conflicts...${NC}"
-for port in 8000 8001 8002 47070 47071; do
+for port in 48000 48001 48002 47070 47071; do
     if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1; then
         echo -e "${RED}ERROR: Port $port is already in use${NC}"
         echo "Please stop the service using this port or change the port in docker-compose.yml"
@@ -59,7 +59,7 @@ echo -e "${YELLOW}Waiting for services to be ready...${NC}"
 sleep 5
 
 # Check health
-if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+if curl -s http://localhost:48000/health > /dev/null 2>&1; then
     echo -e "${GREEN}✓ Memo API Server is healthy${NC}"
 else
     echo -e "${RED}✗ Memo API Server is not responding${NC}"
@@ -81,10 +81,10 @@ echo -e "${GREEN}✓ Memo Application is running!${NC}"
 echo -e "${BLUE}=======================================${NC}"
 echo ""
 echo -e "${BLUE}Memo Services:${NC}"
-echo -e "  Frontend:        http://localhost:8002"
-echo -e "  API Docs:        http://localhost:8000/docs"
-echo -e "  Health Check:    http://localhost:8000/health"
-echo -e "  MCP SSE:         http://localhost:8001/sse"
+echo -e "  Frontend:        http://localhost:48002"
+echo -e "  API Docs:        http://localhost:48000/docs"
+echo -e "  Health Check:    http://localhost:48000/health"
+echo -e "  MCP SSE:         http://localhost:48001/sse"
 echo ""
 echo -e "${BLUE}MCP Box Services:${NC}"
 echo -e "  SSE Endpoint:    http://localhost:47070/sse"

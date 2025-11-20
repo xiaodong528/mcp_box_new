@@ -7,23 +7,23 @@ services:
       dockerfile: Dockerfile
     container_name: memo-app
     ports:
-      # 可选: 保留直接访问端口用于调试
-      - "8000:8000"  # API Server (可通过 http://localhost:8000 直接访问)
-      - "8001:8001"  # MCP SSE Server
-      - "8002:8002"  # Frontend Static Server (已由 nginx 接管,可注释掉)
+      # 标准端口映射
+      - "48000:48000"   # API Server
+      - "48001:48001"   # MCP SSE Server
+      - "48002:48002"   # Frontend Static Server
     volumes:
       # Persist SQLite database
       - memo-data:/app/data
-      # Optional: Mount source code for development (comment out for production)
-      # - ./backend:/app/backend
-      # - ./frontend:/app/frontend
+      # Mount source code for development (实时生效)
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
     environment:
       - MEMO_DB_PATH=/app/data/memo.db
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:48000/health"]
       interval: 30s
       timeout: 3s
       retries: 3
@@ -53,7 +53,7 @@ services:
       - E2B_DEBUG=${E2B_DEBUG:-false}
       - E2B_API_KEY=${E2B_API_KEY:-e2b_833bb39cd9cb0d20dd4c13638af22864531d652c}
       # Memo API 地址 (容器内网络)
-      - MEMO_API_URL=http://memo:8000
+      - MEMO_API_URL=http://memo:48000
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
       # 数据库配置

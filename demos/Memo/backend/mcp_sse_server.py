@@ -7,12 +7,12 @@ from .mcp_server import create_server
 def main():
     parser = argparse.ArgumentParser(description="Run Memo MCP server over SSE")
     parser.add_argument("--host", default="127.0.0.1", help="Server host (default: 127.0.0.1)")
-    parser.add_argument("--port", type=int, default=8001, help="Server port (default: 8001)")
+    parser.add_argument("--port", type=int, default=48001, help="Server port (default: 48001)")
     parser.add_argument("--mount-path", default="/", help="Mount path for SSE (default: /)")
     parser.add_argument(
         "--api-url",
         default=None,
-        help="API server URL (default: MEMO_API_URL env var or http://127.0.0.1:8000)",
+        help="API server URL (default: MEMO_API_URL env var or http://127.0.0.1:48000)",
     )
     args = parser.parse_args()
 

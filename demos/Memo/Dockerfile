@@ -39,10 +39,10 @@ ENV MEMO_DB_PATH=/app/data/memo.db \
     PYTHONDONTWRITEBYTECODE=1
 
 # Expose ports
-# 8000: API Server (FastAPI)
-# 8001: MCP SSE Server (FastMCP)
-# 8002: Frontend Static Server
-EXPOSE 8000 8001 8002
+# 48000: API Server (FastAPI)
+# 48001: MCP SSE Server (FastMCP)
+# 48002: Frontend Static Server
+EXPOSE 48000 48001 48002
 
 # Copy entrypoint script
 COPY docker-entrypoint.sh /docker-entrypoint.sh
@@ -50,7 +50,7 @@ RUN chmod +x /docker-entrypoint.sh
 
 # Health check for API server
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:48000/health || exit 1
 
 # Start all services
 CMD ["/docker-entrypoint.sh"]

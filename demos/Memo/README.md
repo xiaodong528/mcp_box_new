@@ -27,18 +27,18 @@ README.md          # 项目说明文档（本文件）
 
 1) 启动后端 API
 
-- `uvicorn backend.api:app --host 127.0.0.1 --port 8000 --reload`
+- `uvicorn backend.api:app --host 127.0.0.1 --port 48000 --reload`
 
 2) 启动 MCP SSE 服务
 
-- `python -m backend.mcp_sse_server --host 127.0.0.1 --port 8001`
-- SSE 端点：`http://127.0.0.1:8001/sse`
-- 消息端点：`http://127.0.0.1:8001/messages/`
+- `python -m backend.mcp_sse_server --host 127.0.0.1 --port 48001`
+- SSE 端点：`http://127.0.0.1:48001/sse`
+- 消息端点：`http://127.0.0.1:48001/messages/`
 
 3) 启动前端静态服务器（在 `frontend/` 目录下）
 
-- `python -m http.server 8002`
-- 前端访问地址：`http://127.0.0.1:8002/`
+- `python -m http.server 48002`
+- 前端访问地址：`http://127.0.0.1:48002/`
 
 ## API 说明（FastAPI）
 
@@ -55,9 +55,9 @@ README.md          # 项目说明文档（本文件）
 示例：
 
 - 创建：
-  - `curl -X POST http://127.0.0.1:8000/memos -H 'Content-Type: application/json' -d '{"title":"记录","content":"内容","tags":["工作"]}'`
+  - `curl -X POST http://127.0.0.1:48000/memos -H 'Content-Type: application/json' -d '{"title":"记录","content":"内容","tags":["工作"]}'`
 - 搜索：
-  - `curl 'http://127.0.0.1:8000/memos?search=内容'`
+  - `curl 'http://127.0.0.1:48000/memos?search=内容'`
 
 说明：已为 API 启用 CORS，前端可直接跨域调用。
 
@@ -82,17 +82,17 @@ README.md          # 项目说明文档（本文件）
 
 客户端连接配置示例（SSE）：
 
-- SSE URL：`http://127.0.0.1:8001/sse`
-- 消息 URL：`http://127.0.0.1:8001/messages/`
+- SSE URL：`http://127.0.0.1:48001/sse`
+- 消息 URL：`http://127.0.0.1:48001/messages/`
 
 ## 前端说明
 
-- 页面地址：`http://127.0.0.1:8002/`
+- 页面地址：`http://127.0.0.1:48002/`
 - 功能：
   - 新建备忘录（标题、内容、标签（逗号分隔））
   - 搜索（按标题或内容）
   - 列表展示（含编辑、删除）
-- `frontend/app.js` 的 `API_BASE` 默认指向 `http://127.0.0.1:8000`，如有变更请修改。
+- `frontend/app.js` 的 `API_BASE` 默认指向 `http://127.0.0.1:48000`，如有变更请修改。
 
 ## 测试与自检
 
@@ -105,7 +105,7 @@ README.md          # 项目说明文档（本文件）
 
 ## 常见问题与提示
 
-- 端口占用：如 `8000` 已被占用，调整为其他端口并同步更新前端/客户端配置。
+- 端口占用：如 `48000` 已被占用，调整为其他端口并同步更新前端/客户端配置。
 - 搜索范围：当前只对 `title` 与 `content` 搜索，不包含标签；如需扩展，可在后端 SQL 中加入对 `tags` 的匹配（例如 `tags LIKE '%关键词%'`）。
 - 数据库路径：通过 `MEMO_DB_PATH` 环境变量覆盖默认路径。
 
@@ -121,9 +121,9 @@ README.md          # 项目说明文档（本文件）
 docker compose up -d
 
 # 访问应用
-# 前端: http://localhost:8002
-# API 文档: http://localhost:8000/docs
-# 健康检查: http://localhost:8000/health
+# 前端: http://localhost:48002
+# API 文档: http://localhost:48000/docs
+# 健康检查: http://localhost:48000/health
 # MCP Box SSE: http://localhost:47070/sse
 # MCP Box 管理 API: http://localhost:47071
 ```
@@ -183,7 +183,7 @@ MCP Box 可以通过内部网络访问 Memo API:
 import httpx
 
 # 使用容器内部地址
-response = httpx.get("http://memo:8000/memos")
+response = httpx.get("http://memo:48000/memos")
 ```
 
 #### 工具代码示例
@@ -210,7 +210,7 @@ def list_memos(
 
     # 通过容器内网络访问 Memo API
     response = httpx.get(
-        "http://memo:8000/memos",
+        "http://memo:48000/memos",
         params={"search": search, "limit": limit}
     )
     return response.json()
@@ -261,12 +261,12 @@ docker compose restart
 ### 快速启动清单
 
 - 启动 API：
-  - `uvicorn backend.api:app --host 127.0.0.1 --port 8000 --reload`
+  - `uvicorn backend.api:app --host 127.0.0.1 --port 48000 --reload`
 - 启动 MCP（SSE）：
-  - `python -m backend.mcp_sse_server --host 127.0.0.1 --port 8001`
+  - `python -m backend.mcp_sse_server --host 127.0.0.1 --port 48001`
 - 启动前端：
-  - `cd frontend && python -m http.server 8002`
+  - `cd frontend && python -m http.server 48002`
 - 打开前端：
-  - `http://127.0.0.1:8002/`
+  - `http://127.0.0.1:48002/`
 - 接口测试：
   - `curl` 或浏览器直接调用上述 API

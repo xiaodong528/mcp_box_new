@@ -11,7 +11,7 @@ from .api import MemoOut
 
 
 # API 服务器地址配置 (可通过环境变量自定义)
-API_BASE_URL = os.getenv("MEMO_API_URL", "http://127.0.0.1:8000")
+API_BASE_URL = os.getenv("MEMO_API_URL", "http://127.0.0.1:48000")
 
 
 def _http_request(
@@ -72,7 +72,7 @@ def create_server(api_url: Optional[str] = None) -> FastMCP:
     所有工具通过 HTTP 请求调用 API 服务器,而非直接操作数据库。
 
     Args:
-        api_url: API 服务器地址 (可选,默认使用环境变量或 http://127.0.0.1:8000)
+        api_url: API 服务器地址 (可选,默认使用环境变量或 http://127.0.0.1:48000)
     """
     # 如果提供了 api_url 参数,则覆盖全局配置
     if api_url:

@@ -14,15 +14,15 @@ python -c "from backend.db import init_db; init_db()" || {
 echo "✓ Database initialized at ${MEMO_DB_PATH}"
 
 # Start API Server (background)
-echo "[2/4] Starting API Server (port 8000)..."
-uvicorn backend.api:app --host 0.0.0.0 --port 8000 &
+echo "[2/4] Starting API Server (port 48000)..."
+uvicorn backend.api:app --host 0.0.0.0 --port 48000 &
 API_PID=$!
 echo "✓ API Server started (PID: $API_PID)"
 
 # Wait for API server to be ready
 echo "[3/4] Waiting for API Server to be ready..."
 for i in {1..10}; do
-    if curl -s http://localhost:8000/health > /dev/null 2>&1; then
+    if curl -s http://localhost:48000/health > /dev/null 2>&1; then
         echo "✓ API Server is ready"
         break
     fi
@@ -35,25 +35,25 @@ for i in {1..10}; do
 done
 
 # Start MCP SSE Server (background)
-echo "[4/4] Starting MCP SSE Server (port 8001)..."
-python -m backend.mcp_sse_server --host 0.0.0.0 --port 8001 --api-url http://localhost:8000 &
+echo "[4/4] Starting MCP SSE Server (port 48001)..."
+python -m backend.mcp_sse_server --host 0.0.0.0 --port 48001 --api-url http://localhost:48000 &
 MCP_PID=$!
 echo "✓ MCP SSE Server started (PID: $MCP_PID)"
 
 # Start Frontend Static Server (foreground)
-echo "[5/5] Starting Frontend Server (port 8002)..."
+echo "[5/5] Starting Frontend Server (port 48002)..."
 cd frontend
-python -m http.server 8002 &
+python -m http.server 48002 &
 FRONTEND_PID=$!
 
 echo ""
 echo "========================================"
 echo "✓ All services started successfully!"
 echo "========================================"
-echo "API Server:      http://localhost:8000"
-echo "API Docs:        http://localhost:8000/docs"
-echo "MCP SSE Server:  http://localhost:8001/sse"
-echo "Frontend:        http://localhost:8002"
+echo "API Server:      http://localhost:48000"
+echo "API Docs:        http://localhost:48000/docs"
+echo "MCP SSE Server:  http://localhost:48001/sse"
+echo "Frontend:        http://localhost:48002"
 echo "========================================"
 
 # Trap signals to gracefully shutdown

@@ -24,28 +24,28 @@ export MEMO_DB_PATH=/path/to/memo.db
 
 ### 启动服务
 
-**后端 API 服务** (端口 8000):
+**后端 API 服务** (端口 48000):
 ```bash
 cd Memo
-uvicorn backend.api:app --host 127.0.0.1 --port 8000 --reload
+uvicorn backend.api:app --host 127.0.0.1 --port 48000 --reload
 ```
 
-**MCP SSE 服务器** (端口 8001) - ⚠️ 依赖 API 服务器:
+**MCP SSE 服务器** (端口 48001) - ⚠️ 依赖 API 服务器:
 ```bash
 cd Memo
-python -m backend.mcp_sse_server --host 127.0.0.1 --port 8001
+python -m backend.mcp_sse_server --host 127.0.0.1 --port 48001
 
 # 自定义 API 服务器地址
-python -m backend.mcp_sse_server --api-url http://192.168.1.100:8000
+python -m backend.mcp_sse_server --api-url http://192.168.1.100:48000
 ```
 
-**前端静态服务器** (端口 8002):
+**前端静态服务器** (端口 48002):
 ```bash
 cd Memo/frontend
-python -m http.server 8002
+python -m http.server 48002
 ```
 
-**注意**: MCP 服务器通过 HTTP 请求调用 API 服务器,因此必须先启动 API 服务器 (端口 8000)。
+**注意**: MCP 服务器通过 HTTP 请求调用 API 服务器,因此必须先启动 API 服务器 (端口 48000)。
 
 ### 测试
 
@@ -58,7 +58,7 @@ python -m tests.test_backend
 python -m tests.test_api
 
 # MCP 工具测试 (需先启动 API 服务器)
-# 终端 1: uvicorn backend.api:app --host 127.0.0.1 --port 8000
+# 终端 1: uvicorn backend.api:app --host 127.0.0.1 --port 48000
 # 终端 2: python -m tests.test_mcp
 python -m tests.test_mcp
 ```
@@ -71,26 +71,26 @@ python -m tests.test_backend
 ### API 测试示例
 ```bash
 # 健康检查
-curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:48000/health
 
 # 创建备忘录
-curl -X POST http://127.0.0.1:8000/memos \
+curl -X POST http://127.0.0.1:48000/memos \
   -H 'Content-Type: application/json' \
   -d '{"title":"测试","content":"内容","tags":["工作"]}'
 
 # 搜索备忘录
-curl 'http://127.0.0.1:8000/memos?search=测试'
+curl 'http://127.0.0.1:48000/memos?search=测试'
 
 # 查询单条
-curl http://127.0.0.1:8000/memos/1
+curl http://127.0.0.1:48000/memos/1
 
 # 更新备忘录
-curl -X PUT http://127.0.0.1:8000/memos/1 \
+curl -X PUT http://127.0.0.1:48000/memos/1 \
   -H 'Content-Type: application/json' \
   -d '{"title":"新标题"}'
 
 # 删除备忘录
-curl -X DELETE http://127.0.0.1:8000/memos/1
+curl -X DELETE http://127.0.0.1:48000/memos/1
 ```
 
 ## 架构设计
@@ -157,8 +157,8 @@ MCP 客户端
 - `memo.update` - 更新备忘录
 - `memo.delete` - 删除备忘录
 
-**SSE 端点**: `http://127.0.0.1:8001/sse`
-**消息端点**: `http://127.0.0.1:8001/messages/`
+**SSE 端点**: `http://127.0.0.1:48001/sse`
+**消息端点**: `http://127.0.0.1:48001/messages/`
 
 ### 数据库模式
 
@@ -190,7 +190,7 @@ CREATE INDEX idx_memos_updated_at ON memos(updated_at);
 - MCP 工具使用 Pydantic `structured_output=True` 返回结构化数据
 
 ### 修改前端
-- 前端 `API_BASE` 默认为 `http://127.0.0.1:8000`,修改端口时需同步更新
+- 前端 `API_BASE` 默认为 `http://127.0.0.1:48000`,修改端口时需同步更新
 - 前端不依赖任何构建工具,直接编辑 HTML/CSS/JS 即可
 
 ### 数据库路径配置
