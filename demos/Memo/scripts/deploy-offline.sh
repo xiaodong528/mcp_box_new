@@ -219,17 +219,13 @@ step5_verify_deployment() {
         log_warning "⚠️  前端服务 (48002) 无响应"
     fi
 
-    # 检查 MCP SSE 服务 (SSE 端点会持续输出，使用超时避免卡住)
-    if timeout 3 curl -s http://localhost:47070/sse > /dev/null 2>&1; then
+    # 检查 MCP SSE 服务 (SSE 端点会持续输出，读取前几行检查响应)
+    # 使用 curl 自带的 --max-time 以兼容 macOS 等缺省无 timeout 命令的环境
+    SSE_OUTPUT=$(curl -s --max-time 3 http://localhost:47070/sse 2>&1 | head -n 5)
+    if echo "$SSE_OUTPUT" | grep -q "event: endpoint"; then
         log_success "✅ MCP SSE 服务 (47070) 正常"
     else
-        # 超时(124)或成功接收数据都表示服务正常
-        EXIT_CODE=$?
-        if [ $EXIT_CODE -eq 124 ] || [ $EXIT_CODE -eq 0 ]; then
-            log_success "✅ MCP SSE 服务 (47070) 正常"
-        else
-            log_warning "⚠️  MCP SSE 服务 (47070) 无响应"
-        fi
+        log_warning "⚠️  MCP SSE 服务 (47070) 无响应"
     fi
 
     wait_for_confirmation
