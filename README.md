@@ -45,18 +45,19 @@ MCP Box 是一个动态 MCP (Model Context Protocol) 工具服务器,允许在�
 ### 组件说明
 
 1. **McpBox** (`src/mcp_box.py`)
+
    - 核心服务器类,管理 MCP 工具的生命周期
    - 提供 HTTP API 用于动态工具操作
    - 从数据库或配置文件加载工具定义
    - 在独立线程中运行 FastMCP 服务器
-
 2. **FastMCPBox** (`src/fast_mcp_sandbox.py`)
+
    - 继承自 FastMCP,增强沙箱执行能力
    - 使用 E2B Code Interpreter 在隔离环境中执行
    - 通过 `<requirements>` 标签自动解析依赖
    - 将 MCP 工具装饰器转换为可执行的 Python 函数
-
 3. **存储层**
+
    - PostgreSQL 数据库用于持久化工具存储(可选)
    - JSON 配置文件 `config/mcp-tool.json` 用于文件存储
 
@@ -135,6 +136,7 @@ bash scripts/docker/start.sh
 ```
 
 `start.sh` 脚本将:
+
 - 从 Dockerfile 构建 Docker 镜像
 - 创建持久化的 Docker 卷用于存储日志和配置
 - 停止并删除已存在的容器
@@ -157,6 +159,7 @@ bash scripts/docker/manage-volumes.sh clean      # 删除所有卷 (警告:数�
 ```
 
 **创建的 Docker 卷:**
+
 - `mcp-box-logs`: 存储应用日志(挂载到 `/app/mcp-box/logs`)
 - `mcp-box-config`: 存储配置文件(挂载到 `/app/mcp-box/config`)
 
@@ -325,11 +328,3 @@ mcp_box_new/
 3. **工具命名**: 工具名称必须唯一,添加前检查是否已存在
 4. **错误处理**: 沙箱执行错误会包含详细的错误名称、值和堆栈跟踪
 5. **Schema 合并**: `merge_tool_input_schema()` 将 annotations 中的参数描述合并到 inputSchema
-
-## 许可证
-
-[在此添加许可证信息]
-
-## 贡献
-
-[在此添加贡献指南]
