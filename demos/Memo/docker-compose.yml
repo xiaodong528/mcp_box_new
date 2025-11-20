@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: memo-memo:latest
     container_name: memo-app
     ports:
       # 标准端口映射
@@ -35,6 +36,7 @@ services:
     build:
       context: ../..  # 指向项目根目录
       dockerfile: Dockerfile
+    image: memo-mcp-box:latest
     container_name: mcp-box
     ports:
       - "47070:47070"  # MCP SSE 服务器
@@ -51,7 +53,7 @@ services:
       - E2B_JUPYTER_HOST=${E2B_JUPYTER_HOST}
       - E2B_JUPYTER_PORT=${E2B_JUPYTER_PORT:-49999}
       - E2B_DEBUG=${E2B_DEBUG:-false}
-      - E2B_API_KEY=${E2B_API_KEY:-e2b_833bb39cd9cb0d20dd4c13638af22864531d652c}
+      - E2B_API_KEY=${E2B_API_KEY:-}
       # Memo API 地址 (容器内网络)
       - MEMO_API_URL=http://memo:48000
       - PYTHONUNBUFFERED=1

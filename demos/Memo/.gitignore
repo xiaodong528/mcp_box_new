@@ -11,3 +11,4 @@ __pycache__
 .claude
 memo.db
 .test_*.db
+images/
