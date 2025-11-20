@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Memo App</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>备忘录</h1>
+    </header>
+
+    <main>
+      <section class="controls">
+        <div class="create">
+          <h2>新建备忘录</h2>
+          <form id="createForm">
+            <label>
+              标题
+              <input type="text" id="titleInput" required />
+            </label>
+            <label>
+              内容
+              <textarea id="contentInput" rows="4" required></textarea>
+            </label>
+            <label>
+              标签（逗号分隔）
+              <input type="text" id="tagsInput" placeholder="工作, 进度" />
+            </label>
+            <button type="submit">添加</button>
+          </form>
+        </div>
+
+        <div class="search">
+          <h2>搜索</h2>
+          <form id="searchForm" class="inline-form">
+            <input type="search" id="searchInput" placeholder="按标题或内容搜索" />
+            <button id="searchBtn" type="submit">搜索</button>
+            <button id="resetBtn" type="button" class="secondary">重置</button>
+          </form>
+        </div>
+      </section>
+
+      <section>
+        <h2>备忘录列表</h2>
+        <div id="memoList"></div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

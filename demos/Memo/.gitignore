@@ -1,0 +1,13 @@
+__pycache__
+.idea
+
+# macos
+.DS_Store
+.Spotlight-V100
+.Trashes
+.trae/
+.test*.db
+.serena
+.claude
+memo.db
+.test_*.db

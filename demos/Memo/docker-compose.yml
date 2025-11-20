@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  memo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: memo-app
+    ports:
+      # 可选: 保留直接访问端口用于调试
+      - "8000:8000"  # API Server (可通过 http://localhost:8000 直接访问)
+      - "8001:8001"  # MCP SSE Server
+      - "8002:8002"  # Frontend Static Server (已由 nginx 接管,可注释掉)
+    volumes:
+      # Persist SQLite database
+      - memo-data:/app/data
+      # Optional: Mount source code for development (comment out for production)
+      # - ./backend:/app/backend
+      # - ./frontend:/app/frontend
+    environment:
+      - MEMO_DB_PATH=/app/data/memo.db
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - memo-network
+
+  mcp-box:
+    build:
+      context: ../..  # 指向项目根目录
+      dockerfile: Dockerfile
+    container_name: mcp-box
+    ports:
+      - "47070:47070"  # MCP SSE 服务器
+      - "47071:47071"  # HTTP 管理接口
+    volumes:
+      # 持久化工具配置文件
+      - mcp-config:/app/mcp-box/config
+      # 持久化日志
+      - mcp-logs:/app/mcp-box/logs
+    environment:
+      # 文件存储模式
+      - STORE_IN_FILE=true
+      # E2B 沙箱配置
+      - E2B_JUPYTER_HOST=${E2B_JUPYTER_HOST}
+      - E2B_JUPYTER_PORT=${E2B_JUPYTER_PORT:-49999}
+      - E2B_DEBUG=${E2B_DEBUG:-false}
+      - E2B_API_KEY=${E2B_API_KEY:-e2b_833bb39cd9cb0d20dd4c13638af22864531d652c}
+      # Memo API 地址 (容器内网络)
+      - MEMO_API_URL=http://memo:8000
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+      # 数据库配置
+      - DB_HOST=${DB_HOST:-10.19.88.9}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-mcpbox}
+      - DB_USER=${DB_USER:-mcpbox}
+      - DB_PASSWORD=${DB_PASSWORD:-mcpbox}
+
+    restart: unless-stopped
+    depends_on:
+      - memo
+    networks:
+      - memo-network
+
+volumes:
+  # Named volume for database persistence
+  memo-data:
+    driver: local
+  # MCP Box configuration persistence
+  mcp-config:
+    driver: local
+  # MCP Box logs persistence
+  mcp-logs:
+    driver: local
+
+networks:
+  memo-network:
+    driver: bridge

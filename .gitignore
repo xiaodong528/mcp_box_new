@@ -67,3 +67,4 @@ backups/
 # config/mcp-tool.json
 .env
 .serena
+.claude
