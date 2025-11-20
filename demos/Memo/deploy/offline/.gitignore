@@ -1,0 +1,4 @@
+# 离线部署包输出目录
+packages/
+offline-package-*/
+*.tar.gz
