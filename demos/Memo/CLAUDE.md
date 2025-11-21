@@ -10,6 +10,12 @@ Memo 是一个前后端分离的备忘录应用,同时提供 HTTP API 和 MCP (M
 - 后端: Python + FastAPI + SQLite
 - 前端: 原生 HTML/CSS/JavaScript (无框架)
 - MCP: FastMCP (SSE 服务器)
+- 容器化: Docker + Docker Compose
+
+**架构支持**:
+- **目标平台**: x86_64/amd64 (标准生产服务器)
+- **构建支持**: 跨架构构建,支持在 ARM 机器上构建 x86 镜像
+- **部署模式**: Docker 容器化部署,支持离线部署
 
 ## 开发命令
 
@@ -173,6 +179,35 @@ CREATE TABLE memos (
 );
 
 CREATE INDEX idx_memos_updated_at ON memos(updated_at);
+```
+
+## Docker 部署
+
+### 架构说明
+
+**镜像平台**: 所有 Docker 镜像强制构建为 **linux/amd64** (x86_64) 架构
+
+**配置位置**:
+- `docker-compose.yml`: 开发环境配置,包含 `platform: linux/amd64` 和构建平台参数
+- `docker-compose.prod.yml`: 生产环境配置,使用预构建镜像,指定 `platform: linux/amd64`
+- `scripts/prepare-offline-images.sh`: 离线部署包准备脚本,强制 x86_64 架构构建
+
+**跨架构构建**:
+- 在 ARM 机器（如 Mac M1/M2）上构建时,Docker 会自动使用 QEMU 进行跨平台编译
+- 构建命令使用 `DOCKER_DEFAULT_PLATFORM=linux/amd64` 环境变量确保架构正确
+- Python 基础镜像使用 `docker pull --platform linux/amd64 python:3.12-slim` 拉取
+
+### 离线部署
+
+详见 [README-OFFLINE-DEPLOY.md](README-OFFLINE-DEPLOY.md)
+
+**准备流程**:
+```bash
+# 在有网环境构建并打包
+bash scripts/prepare-offline-images.sh
+
+# 传输到内网环境后部署
+bash deploy-offline.sh
 ```
 
 ## 开发注意事项

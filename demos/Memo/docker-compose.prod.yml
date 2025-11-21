@@ -18,6 +18,7 @@ services:
   # ===========================================================================
   memo:
     image: memo-memo:latest
+    platform: linux/amd64
     container_name: memo-app
     ports:
       - "48000:48000"   # API Server (FastAPI)
@@ -53,6 +54,7 @@ services:
   # ===========================================================================
   mcp-box:
     image: memo-mcp-box:latest
+    platform: linux/amd64
     container_name: mcp-box
     ports:
       - "47070:47070"   # MCP SSE 服务器

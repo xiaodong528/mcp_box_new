@@ -82,13 +82,16 @@ step0_check_environment() {
 # 步骤 1: 构建镜像
 step1_build_images() {
     log_info "=========================================="
-    log_info "步骤 1: 构建 Docker 镜像"
+    log_info "步骤 1: 构建 Docker 镜像 (linux/amd64)"
     log_info "=========================================="
 
     cd "${PROJECT_ROOT}"
 
-    log_info "正在构建镜像（这可能需要几分钟）..."
-    docker-compose build
+    log_info "正在构建 x86_64 架构镜像（这可能需要几分钟）..."
+    log_info "注意: 构建将强制使用 linux/amd64 平台以支持 x86 服务器"
+
+    # 使用 DOCKER_DEFAULT_PLATFORM 环境变量强制指定平台
+    DOCKER_DEFAULT_PLATFORM=linux/amd64 docker-compose build --no-cache
 
     log_success "镜像构建完成"
     echo ""
@@ -144,15 +147,13 @@ step3_save_images() {
     docker save -o "${IMAGES_DIR}/mcp-box.tar" "$MCP_BOX_IMAGE"
     log_success "已保存: mcp-box.tar ($(du -h "${IMAGES_DIR}/mcp-box.tar" | cut -f1))"
 
-    # 检查并拉取 Python 基础镜像
-    log_info "检查 Python 基础镜像: python:3.12-slim"
-    if ! docker images python:3.12-slim | grep -q "3.12-slim"; then
-        log_info "本地未找到 python:3.12-slim，正在从 Docker Hub 拉取..."
-        docker pull python:3.12-slim
-        log_success "已拉取 python:3.12-slim"
-    else
-        log_info "本地已存在 python:3.12-slim"
-    fi
+    # 检查并拉取 Python 基础镜像 (x86_64 架构)
+    log_info "检查 Python 基础镜像: python:3.12-slim (linux/amd64)"
+
+    # 强制拉取 x86_64 架构的镜像
+    log_info "正在拉取 x86_64 架构的 python:3.12-slim..."
+    docker pull --platform linux/amd64 python:3.12-slim
+    log_success "已拉取 python:3.12-slim (linux/amd64)"
 
     log_info "保存基础镜像: python:3.12-slim"
     docker save -o "${IMAGES_DIR}/python-base.tar" python:3.12-slim

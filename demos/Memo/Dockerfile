@@ -1,7 +1,7 @@
 # Memo Application - Single Container Multi-Service
 # Architecture: API Server + MCP SSE Server + Frontend Static Server
 
-FROM python:3.12-slim
+FROM --platform=linux/amd64 python:3.12-slim
 
 # Set working directory
 WORKDIR /app

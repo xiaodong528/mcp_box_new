@@ -5,7 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
     image: memo-memo:latest
+    platform: linux/amd64
     container_name: memo-app
     ports:
       # 标准端口映射
@@ -36,7 +39,10 @@ services:
     build:
       context: ../..  # 指向项目根目录
       dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
     image: memo-mcp-box:latest
+    platform: linux/amd64
     container_name: mcp-box
     ports:
       - "47070:47070"  # MCP SSE 服务器

@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import os
-from typing import Any, Dict, List, Optional
+from typing import Annotated, Any, Dict, List, Optional
 
 import httpx
 from mcp.server import FastMCP
+from pydantic import Field
 
 
 # API 服务器地址配置 (可通过环境变量自定义)
@@ -80,46 +81,31 @@ def create_server(api_url: Optional[str] = None) -> FastMCP:
     # 为了与 mcp_box_server.py 保持一致的命名
     mcp = server
 
-    @mcp.tool(
-        description='创建一条新的备忘录',
-        annotations={
-            "parameters": {
-                "title": {"description": "备忘录标题"},
-                "content": {"description": "备忘录内容"},
-                "tags": {"description": "标签列表，可选，默认为空列表"}
-            }
-        }
-    )
-    def memo_create(title: str, content: str, tags: Optional[List[str]] = None) -> Dict[str, Any]:
+    @mcp.tool(description='创建一条新的备忘录')
+    def memo_create(
+        title: Annotated[str, Field(description="备忘录标题")],
+        content: Annotated[str, Field(description="备忘录内容")],
+        tags: Annotated[Optional[List[str]], Field(default=None, description="标签列表,可选,默认为空列表")] = None
+    ) -> Dict[str, Any]:
         """创建一条新的备忘录,并返回完整记录"""
         payload = {"title": title, "content": content, "tags": tags or []}
         data = _http_request("POST", "/memos", json_data=payload)
         return data
 
-    @mcp.tool(
-        description='根据 id 查询备忘录',
-        annotations={
-            "parameters": {
-                "memo_id": {"description": "备忘录 ID"}
-            }
-        }
-    )
-    def memo_get(memo_id: int) -> Dict[str, Any]:
+    @mcp.tool(description='根据 id 查询备忘录')
+    def memo_get(
+        memo_id: Annotated[int, Field(description="备忘录 ID")]
+    ) -> Dict[str, Any]:
         """根据 id 查询备忘录,不存在则抛出错误"""
         data = _http_request("GET", f"/memos/{memo_id}")
         return data
 
-    @mcp.tool(
-        description='按更新时间倒序列出备忘录,支持搜索与分页',
-        annotations={
-            "parameters": {
-                "search": {"description": "搜索关键词，可选，搜索标题和内容"},
-                "limit": {"description": "返回结果数量限制，可选"},
-                "offset": {"description": "分页偏移量，默认为 0"}
-            }
-        }
-    )
-    def memo_list(search: Optional[str] = None, limit: Optional[int] = None, offset: int = 0) -> List[Dict[str, Any]]:
+    @mcp.tool(description='按更新时间倒序列出备忘录,支持搜索与分页')
+    def memo_list(
+        search: Annotated[Optional[str], Field(default=None, description="搜索关键词,可选,搜索标题和内容")] = None,
+        limit: Annotated[Optional[int], Field(default=None, description="返回结果数量限制,可选")] = None,
+        offset: Annotated[int, Field(default=0, description="分页偏移量,默认为 0")] = 0
+    ) -> List[Dict[str, Any]]:
         """按更新时间倒序列出备忘录,支持搜索与分页"""
         params = {}
         if search:
@@ -131,22 +117,12 @@ def create_server(api_url: Optional[str] = None) -> FastMCP:
         data = _http_request("GET", "/memos", params=params)
         return data
 
-    @mcp.tool(
-        description='更新指定备忘录的字段',
-        annotations={
-            "parameters": {
-                "memo_id": {"description": "备忘录 ID"},
-                "title": {"description": "新标题，可选"},
-                "content": {"description": "新内容，可选"},
-                "tags": {"description": "新标签列表，可选"}
-            }
-        }
-    )
+    @mcp.tool(description='更新指定备忘录的字段')
     def memo_update(
-        memo_id: int,
-        title: Optional[str] = None,
-        content: Optional[str] = None,
-        tags: Optional[List[str]] = None,
+        memo_id: Annotated[int, Field(description="备忘录 ID")],
+        title: Annotated[Optional[str], Field(default=None, description="新标题,可选")] = None,
+        content: Annotated[Optional[str], Field(default=None, description="新内容,可选")] = None,
+        tags: Annotated[Optional[List[str]], Field(default=None, description="新标签列表,可选")] = None,
     ) -> Dict[str, Any]:
         """更新指定字段并返回更新后的备忘录"""
         payload = {}
@@ -159,15 +135,10 @@ def create_server(api_url: Optional[str] = None) -> FastMCP:
         data = _http_request("PUT", f"/memos/{memo_id}", json_data=payload)
         return data
 
-    @mcp.tool(
-        description='删除指定 id 的备忘录',
-        annotations={
-            "parameters": {
-                "memo_id": {"description": "备忘录 ID"}
-            }
-        }
-    )
-    def memo_delete(memo_id: int) -> Dict[str, Any]:
+    @mcp.tool(description='删除指定 id 的备忘录')
+    def memo_delete(
+        memo_id: Annotated[int, Field(description="备忘录 ID")]
+    ) -> Dict[str, Any]:
         """删除指定 id 的备忘录,返回删除结果"""
         data = _http_request("DELETE", f"/memos/{memo_id}")
         return data
